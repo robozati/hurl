@@ -3,6 +3,7 @@ members = [
     "packages/hurl",
     "packages/hurlfmt",
     "packages/hurl_core",
+    "packages/hurlss"
 ]
 resolver = "2"
 

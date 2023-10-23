@@ -1,0 +1,9 @@
+[package]
+name = "hurlss"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hurl_core = { version = "4.2.0-SNAPSHOT", path = "../hurl_core" }
+tokio = { version = "1", features = ["rt-multi-thread", "io-std", "macros"] }
+tower-lsp = "0.20"
