@@ -98,28 +98,44 @@ impl Scan for ast::Section {
     fn scan(&self, tokens: &mut Vec<Token>) {
         self.line_terminators.iter().for_each(|lt| lt.scan(tokens));
         self.line_terminator0.scan(tokens);
-        tokens.push(Token::new(
-            TokenType::EnumMember,
-            // The Section .source_info starts counting on the open bracket and stops on the close
-            // bracket, but the semantic token only wants the middle.
-            SourceInfo::new(
-                self.source_info.start.line,
-                self.source_info.start.column + 1,
-                self.source_info.end.line,
-                self.source_info.end.column - 1,
-            ),
-        ));
+        tokens.push(Token::new(TokenType::EnumMember, self.source_info.clone()));
         self.value.scan(tokens);
     }
 }
 
 impl Scan for ast::Body {
     fn scan(&self, tokens: &mut Vec<Token>) {
-        todo!()
+        self.line_terminators.iter().for_each(|lt| lt.scan(tokens));
+        self.value.scan(tokens);
+        self.line_terminator0.scan(tokens);
     }
 }
 
 impl Scan for ast::SectionValue {
+    fn scan(&self, tokens: &mut Vec<Token>) {
+        match self {
+            Self::QueryParams(key_values) => key_values.iter().for_each(|kv| kv.scan(tokens)),
+            Self::FormParams(key_values) => key_values.iter().for_each(|kv| kv.scan(tokens)),
+            Self::MultipartFormData(multipart_params) => {
+                multipart_params.iter().for_each(|mp| mp.scan(tokens))
+            }
+            Self::BasicAuth(maybe_kv) => {
+                if let Some(kv) = maybe_kv {
+                    kv.scan(tokens);
+                }
+            }
+            _ => (),
+        }
+    }
+}
+
+impl Scan for ast::MultipartParam {
+    fn scan(&self, tokens: &mut Vec<Token>) {
+        todo!()
+    }
+}
+
+impl Scan for ast::Bytes {
     fn scan(&self, tokens: &mut Vec<Token>) {
         todo!()
     }

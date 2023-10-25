@@ -18,7 +18,7 @@ pub enum TokenType {
     String,
     /// Variable between '{{' and '}}'.
     Variable,
-    /// Section value, like 'Asserts' or 'Basic' auth.
+    /// Section value, like "[Asserts]" or "[Basic auth]".
     EnumMember,
 }
 
